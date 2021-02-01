@@ -1,0 +1,92 @@
+Eigen
+
+resnet18be 40FPS
+
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.1083,     0.9425,      5.067,      0.212,      0.000,      0.861,      0.940,      0.972
+>>> Eigen 80: Conventional Post-Processing Evaluation
+0 files missing
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.1039,     0.8473,      4.863,      0.204,      0.000,      0.864,      0.943,      0.975
+>>> Eigen 80: Edge-Guided Post-Processing Evaluation
+0 files missing
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.1022,     0.8274,      4.775,      0.198,      0.000,      0.870,      0.947,      0.976
+>>> Eigen 80: Adv Minimum Post-Processing Evaluation
+0 files missing
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.1019,     0.8753,      4.827,      0.196,      0.000,      0.873,      0.950,      0.977
+>>> Eigen 50: native Evaluation
+0 files missing
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.1017,     0.6734,      3.764,      0.198,      0.000,      0.874,      0.947,      0.975
+>>> Eigen 50: Conventional Post-Processing Evaluation
+0 files missing
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.0979,     0.6147,      3.634,      0.191,      0.000,      0.877,      0.950,      0.978
+>>> Eigen 50: Edge-Guided Post-Processing Evaluation
+0 files missing
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.0962,     0.5986,      3.554,      0.186,      0.000,      0.883,      0.954,      0.980
+>>> Eigen 50: Adv Minimum Post-Processing Evaluation
+0 files missing
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.0953,     0.6183,      3.562,      0.183,      0.000,      0.886,      0.956,      0.980
+
+
+
+resnet18bes 44FPS
+
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.1109,     0.9490,      5.099,      0.213,      0.000,      0.858,      0.940,      0.972
+>>> Eigen 80: Conventional Post-Processing Evaluation
+0 files missing
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.1057,     0.8500,      4.884,      0.204,      0.000,      0.862,      0.944,      0.975
+>>> Eigen 80: Edge-Guided Post-Processing Evaluation
+0 files missing
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.1041,     0.8300,      4.789,      0.199,      0.000,      0.868,      0.948,      0.977
+>>> Eigen 80: Adv Minimum Post-Processing Evaluation
+0 files missing
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.1041,     0.8786,      4.841,      0.197,      0.000,      0.871,      0.950,      0.978
+>>> Eigen 50: native Evaluation
+0 files missing
+./utils/eval/evaluate_kitti.py:45: RuntimeWarning: divide by zero encountered in true_divide
+  depth_pred = (baseline * focal_length) / disp_pred
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.1044,     0.6862,      3.807,      0.200,      0.000,      0.871,      0.947,      0.976
+>>> Eigen 50: Conventional Post-Processing Evaluation
+0 files missing
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.0998,     0.6210,      3.659,      0.192,      0.000,      0.875,      0.951,      0.978
+>>> Eigen 50: Edge-Guided Post-Processing Evaluation
+0 files missing
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.0982,     0.6057,      3.575,      0.187,      0.000,      0.881,      0.955,      0.980
+>>> Eigen 50: Adv Minimum Post-Processing Evaluation
+0 files missing
+   abs_rel,     sq_rel,        rms,    log_rms,     d1_all,         a1,         a2,         a3
+    0.0978,     0.6298,      3.593,      0.185,      0.000,      0.884,      0.956,      0.980
+
+resnet18besd 
+
+
+
+
+
+
+WARNING:tensorflow:From /home/kuo/workspace/monodepth/tfcv_resnet18be/utils/mde_postproc.py:60: The name tf.nn.avg_pool is deprecated. Please use tf.nn.avg_pool2d instead.
+
+WARNING:tensorflow:From /home/kuo/workspace/monodepth/tfcv_resnet18be/engine/test.py:48: The name tf.ConfigProto is deprecated. Please use tf.compat.v1.ConfigProto instead.
+
+WARNING:tensorflow:From /home/kuo/workspace/monodepth/tfcv_resnet18be/engine/test.py:50: The name tf.Session is deprecated. Please use tf.compat.v1.Session instead.
+
+WARNING:tensorflow:From /home/kuo/workspace/monodepth/tfcv_resnet18be/engine/test.py:53: The name tf.train.Saver is deprecated. Please use tf.compat.v1.train.Saver instead.
+
+WARNING:tensorflow:From /home/kuo/workspace/monodepth/tfcv_resnet18be/engine/test.py:56: The name tf.global_variables_initializer is deprecated. Please use tf.compat.v1.global_variables_initializer instead.
+
+WARNING:tensorflow:From /home/kuo/workspace/monodepth/tfcv_resnet18be/engine/test.py:57: The name tf.local_variables_initializer is deprecated. Please use tf.compat.v1.local_variables_initializer instead.
+
+WARNING:tensorflow:From /home/kuo/workspace/monodepth/tfcv_resnet18be/engine/test.py:59: start_queue_runners (from tensorflow.python.training.queue_runner_impl) is deprecated and will be removed in a future vers
