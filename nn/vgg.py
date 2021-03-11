@@ -8,7 +8,6 @@ from __future__ import absolute_import, division, print_function
 
 import numpy as np
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
 
 from nn.nn_kits import NnKits
 
@@ -18,7 +17,7 @@ class Vgg(object):
         self.nn = NnKits()
         
     def forward(self, input):
-        with tf.variable_scope('encoder'):
+        with tf.compat.v1.variable_scope('encoder'):
             self.conv1 = self.nn.conv_block(input,  32, 7) # H/2
             self.conv2 = self.nn.conv_block(self.conv1,       64, 5) # H/4
             self.conv3 = self.nn.conv_block(self.conv2,      128, 3) # H/8
@@ -27,7 +26,7 @@ class Vgg(object):
             self.conv6 = self.nn.conv_block(self.conv5,      512, 3) # H/64
             self.enc_feat = self.nn.conv_block(self.conv6,   512, 3) # H/128                
 
-        with tf.variable_scope('skips'):
+        with tf.compat.v1.variable_scope('skips'):
             self.skip1 = self.conv1
             self.skip2 = self.conv2
             self.skip3 = self.conv3

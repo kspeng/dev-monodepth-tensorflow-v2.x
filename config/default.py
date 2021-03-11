@@ -1,23 +1,23 @@
 # MODE
 mode = 'train'
-model_name = 'monodepth'
+model_name = 'kitti'
 
 # MODEL
 do_stereo = 'store_true'
-encoder = 'resvgg'
+encoder = 'resnet18'
 decoder = 'unet'
 
 # DATA
 dataset = 'kitti'
-data_path = ''
-filenames_file = ''
+data_path = '../../dataset/kitti/data/'
+filenames_file = './data/filenames/kitti_train_files.txt'
 image_path=''
 
 # TRAIN
 height = 256
 width = 512
 
-batch_size = 8
+batch_size = 16
 num_epochs = 50
 
 retrain = 'store_true'
@@ -40,5 +40,5 @@ full_summary = 'store_true'
 
 # PATH
 output_directory = ''
-log_directory = ''
+log_directory = 'models'
 checkpoint_path = ''

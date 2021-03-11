@@ -5,11 +5,13 @@ FILE     :: utils_monodepth.py
 '''
 import numpy as np
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
 
+# import mde engine 
+from engine.mde.img_proc import ImgProc
+# import utils 
 from utils.bilinear_sampler import *
+# import nn kits
 from nn.nn_kits import NnKits
-from utils.img_proc import ImgProc
 
 class MdeProc(object):
     """utils for monodepth"""
@@ -60,8 +62,8 @@ class MdeProc(object):
         image_gradients_x = [self.imgproc.gradient_x(img) for img in pyramid]
         image_gradients_y = [self.imgproc.gradient_y(img) for img in pyramid]
 
-        weights_x = [tf.exp(-tf.reduce_mean(tf.abs(g), 3, keep_dims=True)) for g in image_gradients_x]
-        weights_y = [tf.exp(-tf.reduce_mean(tf.abs(g), 3, keep_dims=True)) for g in image_gradients_y]
+        weights_x = [tf.exp(-tf.reduce_mean(tf.abs(g), 3, keepdims=True)) for g in image_gradients_x]
+        weights_y = [tf.exp(-tf.reduce_mean(tf.abs(g), 3, keepdims=True)) for g in image_gradients_y]
 
         smoothness_x = [disp_gradients_x[i] * weights_x[i] for i in range(4)]
         smoothness_y = [disp_gradients_y[i] * weights_y[i] for i in range(4)]

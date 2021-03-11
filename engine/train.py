@@ -15,11 +15,11 @@ import argparse
 import re
 import time
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
+# import tensorflow.contrib.slim as slim
 import scipy.misc
 import cv2
 
-from engine.mde_model import *
+from engine.mde.mde_model import *
 from data.dataloader import *
 from nn.average_gradients import *
 
@@ -69,7 +69,7 @@ class Train:
             tower_grads  = []
             tower_losses = []
             reuse_variables = None
-            with tf.variable_scope(tf.compat.v1.get_variable_scope()):
+            with tf.compat.v1.variable_scope(tf.compat.v1.get_variable_scope()):
                 for i in range(params.num_gpus):
                     with tf.device('/gpu:%d' % i):
 
@@ -101,7 +101,7 @@ class Train:
 
             # SAVER
             summary_writer = tf.compat.v1.summary.FileWriter(params.log_directory + '/' + params.model_name, sess.graph)
-            train_saver = tf.compat.v1.train.Saver(max_to_keep=2)
+            train_saver = tf.compat.v1.train.Saver(max_to_keep=5)
 
             # COUNT PARAMS
             total_num_parameters = 0
@@ -113,7 +113,7 @@ class Train:
             sess.run(tf.compat.v1.global_variables_initializer())
             sess.run(tf.compat.v1.local_variables_initializer())
             coordinator = tf.train.Coordinator()
-            threads = tf.train.start_queue_runners(sess=sess, coord=coordinator)
+            threads = tf.compat.v1.train.start_queue_runners(sess=sess, coord=coordinator)
 
             # LOAD CHECKPOINT IF SET
             if params.checkpoint_path != '':
@@ -133,14 +133,17 @@ class Train:
                     examples_per_sec = params.batch_size / duration
                     time_sofar = (time.time() - start_time) / 3600
                     training_time_left = (num_total_steps / step - 1.0) * time_sofar
-                    print_string = 'batch {:>6} | examples/s: {:4.2f} | loss: {:.5f} | time elapsed: {:.2f}h | time left: {:.2f}h'
-                    print(print_string.format(step, examples_per_sec, loss_value, time_sofar, training_time_left))
-                    summary_str = sess.run(summary_op)
-                    summary_writer.add_summary(summary_str, global_step=step)
-                if step % 10000 == 0: #10000 == 0:
-                    train_saver.save(sess, params.log_directory + '/' + params.model_name + '/model', global_step=step)
+                    print_string = 'batch {:>6}/{} | examples/s: {:4.2f} | loss: {:.5f} | time elapsed: {:.2f}h | time left: {:.2f}h'
+                    print(print_string.format(step, num_total_steps, examples_per_sec, loss_value, time_sofar, training_time_left))
+                    #summary_str = sess.run(summary_op)
+                    #summary_writer.add_summary(summary_str, global_step=step)
 
-            train_saver.save(sess, params.log_directory + '/' + params.model_name + '/model', global_step=num_total_steps)
+                path_to_ckpt = './' + params.log_directory + '/' + params.model_name
+                if step % 10000 == 0: #10000 == 0:
+                    os.makedirs(path_to_ckpt) if not os.path.exists(path_to_ckpt) else None
+                    train_saver.save(sess, path_to_ckpt + '/model', global_step=step)
+
+            train_saver.save(sess, path_to_ckpt + '/model', global_step=num_total_steps)
 
             # FINISHED!
             print('Training Finished.')

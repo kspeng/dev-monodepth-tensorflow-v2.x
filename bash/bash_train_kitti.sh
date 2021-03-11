@@ -1,5 +1,5 @@
 #!/bin/bash
-encoder_='vgg' 
+encoder_='resnet18' 
 batch_=8
 epoch_=100
 dataset_='kitti'
@@ -9,7 +9,7 @@ model_name="$(printf '%s_%s_%dx%d' ${dataset_%} ${encoder_%} ${batch_%} ${epoch_
 echo ">>> ${model_name}"
 
 python tfcv_main.py --mode train \
---data_path "$(printf './data/dataset/%s/data/' ${dataset_%})" \
+--data_path "$(printf '../../dataset/%s/data/' ${dataset_%})" \
 --filenames_file "$(printf './data/filenames/%s_train_files.txt' ${dataset_%})" \
 --log_directory models/ \
 --model_name ${model_name} \

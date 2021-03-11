@@ -1,4 +1,4 @@
-### Monodepth Tensorflow 1.x Development Environment
+### Monodepth Tensorflow 2.x Development Environment
 
 Ported and sourced from the maetrial of [original tensorflow implementation](https://github.com/mrharicot/monodepth) by [Clément Godard](https://github.com/mrharicot).
 

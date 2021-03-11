@@ -8,12 +8,11 @@ from __future__ import absolute_import, division, print_function
 
 import numpy as np
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
-from utils.img_proc import ImgProc
-from utils.mde_proc import MdeProc
 
 from nn.nn_kits import NnKits
-from utils.mde_proc import MdeProc
+from engine.mde.img_proc import ImgProc
+from engine.mde.mde_proc import MdeProc
+
 
 class MdeLoss(object):
     def __init__(self):

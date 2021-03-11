@@ -15,14 +15,13 @@ import argparse
 import re
 import time
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
 import scipy.misc
 import cv2
 import imageio
 from PIL import Image
 import PIL.Image as pil
 import matplotlib.pyplot as plt
-from engine.mde_model import *
+from engine.mde.mde_model import *
 from data.dataloader import *
 from nn.average_gradients import *
 

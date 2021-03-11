@@ -8,10 +8,9 @@ from __future__ import absolute_import, division, print_function
 
 import numpy as np
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
 
 from nn.nn_kits import NnKits
-from utils.mde_proc import MdeProc
+from engine.mde.mde_proc import MdeProc
 
 class UNet(object):
 
@@ -44,7 +43,7 @@ class UNet(object):
         skip2 = self.enc.skip2
         skip1 = self.enc.skip1
 
-        with tf.variable_scope('decoder'):        
+        with tf.compat.v1.variable_scope('decoder'):        
             if self.stages == 6:          
                 upconv7 = upconv(enc,   512, 3, 2, type=self.upconv) #H/32
                 concat7 = tf.concat([upconv7, skip6], 3)
@@ -69,25 +68,24 @@ class UNet(object):
             concat4 = tf.concat([upconv4, skip3], 3)
 
             iconv4  = conv(concat4,  128, 3, 1)
-            self.disp4 = get_disp(iconv4, self.do_duo)
+            self.disp4 = get_disp(iconv4)
             udisp4  = upsample_nn(self.disp4, 2)
 
             upconv3 = upconv(iconv4,  64, 3, 2, type=self.upconv) #H/4
             concat3 = tf.concat([upconv3, skip2, udisp4], 3)
-
             iconv3  = conv(concat3,   64, 3, 1)
-            self.disp3 = get_disp(iconv3, self.do_duo)
+            self.disp3 = get_disp(iconv3)
             udisp3  = upsample_nn(self.disp3, 2)
 
             upconv2 = upconv(iconv3,  32, 3, 2, type=self.upconv) #H/2
             concat2 = tf.concat([upconv2, skip1, udisp3], 3)
 
             iconv2  = conv(concat2,   32, 3, 1)
-            self.disp2 = get_disp(iconv2, self.do_duo)
+            self.disp2 = get_disp(iconv2)
             udisp2  = upsample_nn(self.disp2, 2)
 
             upconv1 = upconv(iconv2,  16, 3, 2, type=self.upconv) #H
             concat1 = tf.concat([upconv1, udisp2], 3)
 
             iconv1  = conv(concat1,   16, 3, 1)
-            self.disp1 = get_disp(iconv1, self.do_duo)
+            self.disp1 = get_disp(iconv1)

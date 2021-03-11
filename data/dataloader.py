@@ -14,7 +14,7 @@ from __future__ import absolute_import, division, print_function
 import tensorflow as tf
 
 def string_length_tf(t):
-  return tf.py_func(len, [t], [tf.int64])
+  return tf.compat.v1.py_func(len, [t], [tf.int64])
 
 class MonodepthDataloader(object):
     """monodepth dataloader"""
@@ -28,11 +28,11 @@ class MonodepthDataloader(object):
         self.left_image_batch  = None
         self.right_image_batch = None
 
-        input_queue = tf.train.string_input_producer([filenames_file], shuffle=False)
-        line_reader = tf.TextLineReader()
+        input_queue = tf.compat.v1.train.string_input_producer([filenames_file], shuffle=False)
+        line_reader = tf.compat.v1.TextLineReader()
         _, line = line_reader.read(input_queue)
 
-        split_line = tf.string_split([line]).values
+        split_line = tf.compat.v1.string_split([line]).values
 
         # we load only one image for test, except if we trained a stereo model
         if mode == 'train' and not self.params.do_stereo:
@@ -60,7 +60,7 @@ class MonodepthDataloader(object):
             # capacity = min_after_dequeue + (num_threads + a small safety margin) * batch_size
             min_after_dequeue = 2048
             capacity = min_after_dequeue + 4 * params.batch_size
-            self.left_image_batch, self.right_image_batch = tf.train.shuffle_batch([left_image, right_image],
+            self.left_image_batch, self.right_image_batch = tf.compat.v1.train.shuffle_batch([left_image, right_image],
                         params.batch_size, capacity, min_after_dequeue, params.num_threads)
         else:
             self.left_image_batch = tf.stack([left_image_o,  tf.image.flip_left_right(left_image_o)],  0)

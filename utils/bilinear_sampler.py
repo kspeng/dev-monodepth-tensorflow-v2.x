@@ -20,12 +20,12 @@ import numpy as np
 
 def bilinear_sampler_1d_h(input_images, x_offset, wrap_mode='border', name='bilinear_sampler', **kwargs):
     def _repeat(x, n_repeats):
-        with tf.variable_scope('_repeat'):
+        with tf.compat.v1.variable_scope('_repeat'):
             rep = tf.tile(tf.expand_dims(x, 1), [1, n_repeats])
             return tf.reshape(rep, [-1])
 
     def _interpolate(im, x, y):
-        with tf.variable_scope('_interpolate'):
+        with tf.compat.v1.variable_scope('_interpolate'):
 
             # handle both texture border types
             _edge_size = 0
@@ -67,7 +67,7 @@ def bilinear_sampler_1d_h(input_images, x_offset, wrap_mode='border', name='bili
             return weight_l * pix_l + weight_r * pix_r
 
     def _transform(input_images, x_offset):
-        with tf.variable_scope('transform'):
+        with tf.compat.v1.variable_scope('transform'):
             # grid of (x_t, y_t, 1), eq (1) in ref [1]
             x_t, y_t = tf.meshgrid(tf.linspace(0.0,   _width_f - 1.0,  _width),
                                    tf.linspace(0.0 , _height_f - 1.0 , _height))
@@ -91,7 +91,7 @@ def bilinear_sampler_1d_h(input_images, x_offset, wrap_mode='border', name='bili
                 output.set_shape( [_num_batch, _height_, _width_, _num_channels])
             return output
 
-    with tf.variable_scope(name):
+    with tf.compat.v1.variable_scope(name):
         #_num_batch      = tf.shape(input_images)[0]
         _height         = tf.shape(input_images)[1]
         _width          = tf.shape(input_images)[2]

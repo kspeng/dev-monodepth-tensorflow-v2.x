@@ -8,20 +8,22 @@ from __future__ import absolute_import, division, print_function
 
 import numpy as np
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
+
+# import mde engine 
+from engine.mde.img_proc import ImgProc
+from engine.mde.mde_proc import MdeProc
+from engine.mde.mde_postproc import MdePostproc
+from engine.mde.mde_loss import MdeLoss
 
 # import utils 
 from utils.bilinear_sampler import *
-from utils.img_proc import ImgProc
-from utils.mde_proc import MdeProc
-from utils.mde_postproc import MdePostproc
-from utils.mde_loss import MdeLoss
 
 # import nn kits
 from nn.nn_kits import NnKits
 from nn.unet import UNet
 from nn.vgg import Vgg
 from nn.resnet import Resnet
+from nn.resnet18 import Resnet18
 from nn.resvgg import Resvgg
 from nn.resASPP import ResASPP
 
@@ -47,7 +49,7 @@ class MonodepthModel(object):
 
         # init codec
         self.encoder(self.params.encoder)
-        self.decoder(self.params.decoder)
+        self.decoder()
 
         # init postproc
         if not self.mode == 'train':
@@ -73,26 +75,37 @@ class MonodepthModel(object):
             self.enc = Resnet()
             self.stages = 5  
         elif encoder_type == 'resvgg':
-            self.enc = Resnet18()
+            self.enc = Resvgg()
             self.stages = 5
-        elif encoder_type == 'vggASPP':
-            self.enc = ResASPP()   
-            self.stages = 4  
         elif encoder_type == 'resASPP':
-            self.enc = ResASPP()   
-            self.stages = 4                                                                                              
+            self.enc = ResASPP()  
+        elif encoder_type == 'resnet18':
+            self.enc = Resnet18()                                                                                      
         else:
             print('>>>{} encoder is not supported. <<<'.format(encoder_type))
             exit()
 
-    def decoder(self, decoder='unet'):
-        if decoder == 'unet':
-            self.dec = UNet(self.stages) 
-        else:
-            print('>>>{} decoder is not supported. 1<<<'.format(decoder_type))
-            exit()
+    def decoder(self): 
+        self.dec = UNet(self.stages) 
 
-    def unet_outputs(self):
+    def build_model(self):
+        with tf.compat.v1.variable_scope('build_model'):
+            with tf.compat.v1.variable_scope('model', reuse=self.reuse_variables):
+
+                self.left_pyramid  = self.imgproc.scale_pyramid(self.left,  4)               
+                if self.mode == 'train':
+                    self.right_pyramid  = self.imgproc.scale_pyramid(self.right, 4)
+
+                if self.params.do_stereo:
+                    self.model_input = tf.concat([self.left, self.right], 3)
+                else:
+                    self.model_input = self.left
+
+                #build model
+                self.enc.forward(self.model_input)
+                self.dec.forward(self.enc)        
+
+    def build_outputs(self):
         self.disp1, self.disp2, self.disp3, self.disp4 =    self.dec.disp1, \
                                                             self.dec.disp2, \
                                                             self.dec.disp3, \
@@ -108,7 +121,6 @@ class MonodepthModel(object):
             self.disp_est_right = self.disp1[0,:,:,1]            
             self.disp_est_pp = self.postproc.post_process(self.disp1)
             self.disp_est_ppp = self.postproc.post_process_plus(self.disp1)
-
             return
 
         # GENERATE IMAGES
@@ -127,7 +139,7 @@ class MonodepthModel(object):
             self.disp_right_smoothness = self.mdeproc.get_disparity_smoothness(self.disp_right_est, self.right_pyramid)
 
 
-    def unet_losses(self):
+    def build_losses(self):
         with tf.compat.v1.variable_scope('losses', reuse=self.reuse_variables):
             self.mde_loss.init_model_output(self)
 
@@ -142,34 +154,4 @@ class MonodepthModel(object):
 
             return self.total_loss
 
-    def build_model(self):
-        with slim.arg_scope([slim.conv2d, slim.conv2d_transpose], activation_fn=tf.nn.elu):
-            with tf.compat.v1.variable_scope('model', reuse=self.reuse_variables):
-
-                self.left_pyramid  = self.imgproc.scale_pyramid(self.left,  4)               
-                if self.mode == 'train':
-                    self.right_pyramid  = self.imgproc.scale_pyramid(self.right, 4)
-
-                if self.params.do_stereo:
-                    self.model_input = tf.concat([self.left, self.right], 3)
-                else:
-                    self.model_input = self.left
-
-                #build model
-                self.enc.forward(self.model_input)
-                self.dec.forward(self.enc)
-
-    def build_outputs(self):
-        if self.params.decoder == 'unet':
-            self.unet_outputs()         
-        else:
-            print('>>>{} decoder is not supported. <<<'.format(decoder_type))
-            exit()
-
-    def build_losses(self):
-        if self.params.decoder == 'unet':
-            self.unet_losses()
-        else:
-            print('>>>{} decoder is not supported. <<<'.format(decoder_type))
-            exit()
 
